@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-900;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+@layer components {
+  /* 大按鈕樣式 */
+  .btn-large {
+    @apply h-14 px-8 text-lg font-semibold rounded-xl transition-all duration-200;
+    @apply shadow-md hover:shadow-lg active:scale-95;
+    @apply disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-md;
+    min-width: 120px;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-white hover:bg-blue-600;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-700 border-2 border-gray-300 hover:border-primary hover:text-primary;
+  }
+
+  /* 輸入框樣式 */
+  .input-field {
+    @apply w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg;
+    @apply focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20;
+    @apply transition-all duration-200;
+  }
+
+  /* 選項按鈕 */
+  .option-btn {
+    @apply w-full px-4 py-3 text-left text-lg border-2 border-gray-300 rounded-lg;
+    @apply hover:border-primary hover:bg-primary/5 transition-all duration-200;
+    @apply cursor-pointer;
+  }
+
+  .option-btn.selected {
+    @apply border-primary bg-primary/10 font-semibold;
+  }
+
+  /* 答案提示 */
+  .answer-feedback {
+    @apply mt-4 p-4 rounded-lg text-lg font-semibold;
+  }
+
+  .answer-feedback.correct {
+    @apply bg-success/10 text-success border-2 border-success;
+  }
+
+  .answer-feedback.incorrect {
+    @apply bg-error/10 text-error border-2 border-error;
+  }
+
+  /* 載入動畫 */
+  .spinner {
+    @apply inline-block w-8 h-8 border-4 border-gray-200 border-t-primary rounded-full;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* 進度條 */
+  .progress-bar {
+    @apply w-full h-2 bg-gray-200 rounded-full overflow-hidden;
+  }
+
+  .progress-fill {
+    @apply h-full bg-primary transition-all duration-300;
+  }
+}
+
+/* 觸控優化 */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 圖片載入優化 */
+img {
+  @apply max-w-full h-auto;
+}
+
+/* 平滑滾動 */
+html {
+  scroll-behavior: smooth;
+}
+
+/* 選取文字顏色 */
+::selection {
+  @apply bg-primary/20;
+}

@@ -1,0 +1,68 @@
+{
+  "title": "測試課文 - Cricket and Baseball",
+  "paragraphs": [
+    {
+      "index": 0,
+      "text": "Mika's cousin Abha is visiting from India. Jerry lives next door. Abha: Who plays cricket, anyone? Mika: You mean baseball. Abha: No, I mean cricket. Don't you know cricket? Mika: Don't you know baseball? Jerry: Let's learn both!",
+      "image": "",
+      "summary": "Mika、Abha 和 Jerry 討論板球和棒球的差異。",
+      "quiz": {
+        "cloze": [
+          {
+            "question": "Abha 來自哪個國家？",
+            "answer": "India"
+          }
+        ],
+        "choices": [
+          {
+            "question": "誰建議學習兩種運動？",
+            "options": ["Mika", "Abha", "Jerry", "沒有人"],
+            "correctIndex": 2
+          }
+        ]
+      }
+    },
+    {
+      "index": 1,
+      "text": "Cricket is popular in many countries. India, England, Australia, and Pakistan all love cricket. In cricket, players use a flat bat. The ball is hard and red. Players wear white clothes.",
+      "image": "",
+      "summary": "板球在許多國家很受歡迎，包括印度、英國、澳洲和巴基斯坦。",
+      "quiz": {
+        "cloze": [
+          {
+            "question": "板球的球是什麼顏色？",
+            "answer": "red"
+          }
+        ],
+        "choices": [
+          {
+            "question": "哪個國家不在文中提到喜歡板球？",
+            "options": ["India", "England", "America", "Australia"],
+            "correctIndex": 2
+          }
+        ]
+      }
+    },
+    {
+      "index": 2,
+      "text": "Baseball is America's favorite sport. It's also popular in Japan, Korea, and Taiwan. Baseball players use a round bat. The ball is white with red stitches. Players wear colorful uniforms.",
+      "image": "",
+      "summary": "棒球是美國最受歡迎的運動，在日本、韓國和台灣也很流行。",
+      "quiz": {
+        "cloze": [
+          {
+            "question": "棒球在哪個亞洲國家很流行？請寫出一個。",
+            "answer": "Japan"
+          }
+        ],
+        "choices": [
+          {
+            "question": "棒球的球棒是什麼形狀？",
+            "options": ["flat 平的", "round 圓的", "square 方的", "oval 橢圓的"],
+            "correctIndex": 1
+          }
+        ]
+      }
+    }
+  ]
+}
