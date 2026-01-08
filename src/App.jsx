@@ -57,20 +57,66 @@ function App() {
         
         // 完整版格式：
         // paragraphs: ["段落1文字", "段落2文字", ...]
-        // paragraphSummaries: ["摘要1", "摘要2", ...]
-        // results: [{ cloze: [...], choices: [...] }, ...]
+        // paragraphSummaries: { "0": [...], "1": [...] } 或 ["摘要1", "摘要2", ...]
+        // results: [{ id, question, options, correct_answer, related_paragraph_index }, ...]
         // paragraphImages: { "0": "base64...", "1": "base64..." }
         
+        // 【重要】完整版的 results 格式說明：
+        // - results 是扁平陣列，所有題目在一起
+        // - 每個題目有 related_paragraph_index (1-based) 指向段落
+        // - correct_answer 是 1-based (1, 2, 3, 4)
+        // - 需要轉換成 0-based 的 correctIndex (0, 1, 2, 3)
+        
+        // 步驟 1：按段落分組題目
+        const questionsByParagraph = {}
+        
+        if (data.results && Array.isArray(data.results)) {
+          data.results.forEach(q => {
+            // related_paragraph_index 是 1-based，轉換成 0-based
+            const paraIndex = (q.related_paragraph_index || 1) - 1
+            
+            if (!questionsByParagraph[paraIndex]) {
+              questionsByParagraph[paraIndex] = []
+            }
+            
+            // 轉換成簡化版格式
+            questionsByParagraph[paraIndex].push({
+              question: q.question,
+              options: q.options || [],
+              correctIndex: (q.correct_answer || 1) - 1  // 1-based → 0-based
+            })
+          })
+          
+          console.log('[題目分組] 每個段落的題目數量:', 
+            Object.entries(questionsByParagraph).map(([idx, qs]) => `段落${parseInt(idx)+1}: ${qs.length}題`)
+          )
+        }
+        
+        // 步驟 2：轉換段落
         const convertedParagraphs = data.paragraphs.map((text, index) => {
-          // 取得對應的圖片、摘要和題目
-          const image = data.paragraphImages?.[index] || ''
-          const summary = data.paragraphSummaries?.[index] || ''
-          const result = data.results?.[index] || {}
+          // 取得對應的圖片
+          const image = data.paragraphImages?.[index] || data.paragraphImages?.[index.toString()] || ''
+          
+          // 取得對應的摘要（支援兩種格式）
+          let summary = ''
+          if (data.paragraphSummaries) {
+            if (Array.isArray(data.paragraphSummaries)) {
+              summary = data.paragraphSummaries[index] || ''
+            } else if (typeof data.paragraphSummaries === 'object') {
+              const summaryArray = data.paragraphSummaries[index] || data.paragraphSummaries[index.toString()]
+              summary = Array.isArray(summaryArray) ? summaryArray.join('\n') : (summaryArray || '')
+            }
+          }
+          
+          // 取得對應的題目
+          const questions = questionsByParagraph[index] || []
           
           // 除錯：顯示每個段落的題目數量
-          console.log(`[段落 ${index + 1}] 題目數量:`, {
-            填空題: result.cloze?.length || 0,
-            選擇題: result.choices?.length || 0
+          console.log(`[段落 ${index + 1}]`, {
+            文字長度: text?.length || 0,
+            有圖片: !!image,
+            有摘要: !!summary,
+            題目數: questions.length
           })
           
           return {
@@ -79,8 +125,8 @@ function App() {
             image: image,
             summary: summary,
             quiz: {
-              cloze: result.cloze || [],
-              choices: result.choices || []
+              cloze: [],  // 完整版目前沒有填空題
+              choices: questions  // 所有題目都是選擇題
             }
           }
         })
@@ -94,21 +140,20 @@ function App() {
           標題: data.title,
           段落數: data.paragraphs.length,
           有圖片的段落: data.paragraphs.filter(p => p.image).length,
-          有題目的段落: data.paragraphs.filter(p => p.quiz.cloze.length > 0 || p.quiz.choices.length > 0).length
+          有題目的段落: data.paragraphs.filter(p => p.quiz.choices.length > 0).length,
+          總題目數: data.paragraphs.reduce((sum, p) => sum + p.quiz.choices.length, 0)
         })
         
-        // 除錯：顯示完整的資料結構（前兩個段落）
-        console.log('[除錯] 前兩個段落的完整資料:', 
-          data.paragraphs.slice(0, 2).map(p => ({
-            文字長度: p.text?.length || 0,
-            有圖片: !!p.image,
-            有摘要: !!p.summary,
-            填空題數: p.quiz?.cloze?.length || 0,
-            選擇題數: p.quiz?.choices?.length || 0,
-            填空題內容: p.quiz?.cloze || [],
-            選擇題內容: p.quiz?.choices || []
-          }))
-        )
+        // 除錯：顯示前兩個段落的完整資料
+        if (data.paragraphs.length > 0) {
+          console.log('[除錯] 第一個段落的題目:', 
+            data.paragraphs[0].quiz.choices.slice(0, 2).map(q => ({
+              題目: q.question,
+              選項數: q.options.length,
+              正確答案索引: q.correctIndex
+            }))
+          )
+        }
       }
       // 格式 2：舊版格式（如果有 analyzedData）
       else if (data.analyzedData && data.analyzedData.paragraphs) {
